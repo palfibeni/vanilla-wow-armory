@@ -5,8 +5,6 @@ import com.palfib.vanilla.wow.armory.data.wrapper.DiscordUserWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.repository.DiscordUserRepository;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -45,6 +43,6 @@ public class DiscordUserService extends AbstractService {
         if (optionalDiscordUser.isPresent()) {
             throw new VanillaWowArmoryServiceException(log, String.format("User is already registered with ID %d.", userWrapper.getId()));
         }
-        return discordUserRepository.save(DiscordUser.builder().userWrapper(userWrapper).build());
+        return discordUserRepository.saveAndFlush(DiscordUser.builder().userWrapper(userWrapper).build());
     }
 }

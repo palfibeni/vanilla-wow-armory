@@ -7,7 +7,6 @@ import com.palfib.vanilla.wow.armory.data.wrapper.WowheadSearchResultWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import lombok.val;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.util.StringUtils;
 
@@ -29,6 +28,12 @@ public class WowheadSearchService extends AbstractService {
     private static final String TOOLTIP_PATH = "/tooltip/";
     private static final String ICON_BASE_URL = "https://wow.zamimg.com";
     private static final String ICON_PATH = "/images/wow/icons/medium";
+
+    private final HttpService httpService;
+
+    public WowheadSearchService(final HttpService httpService) {
+        this.httpService = httpService;
+    }
 
     /**
      * Searches on wowhead.classic.com, and if there is a suggestion available with given searchText, tries to fetch the
@@ -58,8 +63,8 @@ public class WowheadSearchService extends AbstractService {
      * @throws VanillaWowArmoryServiceException if there is no result in the suggestion call,
      *                                          we throw an exception, with user-friendly message.
      */
-    private List<WowheadSuggestionDTO> startSearchOnWowhead(final String searchText) throws VanillaWowArmoryServiceException {
-        val searchResponse = executeGetCall(
+    List<WowheadSuggestionDTO> startSearchOnWowhead(final String searchText) throws VanillaWowArmoryServiceException {
+        val searchResponse = httpService.get(
                 WowheadSearchService.WOWHEAD_BASE_URL,
                 getSuggestionPathBuilderFunction(searchText),
                 WowheadSearchResultDTO.class);
@@ -79,8 +84,8 @@ public class WowheadSearchService extends AbstractService {
      * @throws VanillaWowArmoryServiceException if there is no result in the details call,
      *                                          we throw an exception, with user-friendly message.
      */
-    private WowheadObjectDetailsDTO fetchObjectDetailsFromWowhead(final Integer objectId, final String typeName) throws VanillaWowArmoryServiceException {
-        val objectDTO = executeGetCall(
+    WowheadObjectDetailsDTO fetchObjectDetailsFromWowhead(final Integer objectId, final String typeName) throws VanillaWowArmoryServiceException {
+        val objectDTO = httpService.get(
                 WowheadSearchService.WOWHEAD_BASE_URL,
                 getTooltipPathBuilderFunction(typeName, objectId),
                 WowheadObjectDetailsDTO.class);
@@ -88,24 +93,6 @@ public class WowheadSearchService extends AbstractService {
             throw new VanillaWowArmoryServiceException(log, String.format("No results found for %s (%s)", objectId, typeName));
         }
         return objectDTO;
-    }
-
-    /**
-     * Executes a Rest GET http call, with the given parameters.
-     *
-     * @param <T>         result's type.
-     * @param baseUrl     URI's baseURL
-     * @param pathBuilder endpoint pathbuilder function
-     * @param clazz       result's class
-     * @return The API call's result will be returned mapped to T type.
-     */
-    private <T> T executeGetCall(final String baseUrl, final Function<UriBuilder, URI> pathBuilder, final Class<T> clazz) {
-        val client = WebClient.builder().baseUrl(baseUrl).build();
-        return client.get()
-                .uri(pathBuilder)
-                .retrieve()
-                .bodyToMono(clazz)
-                .block();
     }
 
     private Function<UriBuilder, URI> getSuggestionPathBuilderFunction(final String searchText) {
@@ -130,7 +117,8 @@ public class WowheadSearchService extends AbstractService {
                 .replaceAll(" ::", "::")
                 .replaceAll(":: ", "::")
                 .replaceAll("(::)+", "::")
-                .replaceAll("::", "\n");
+                .replaceAll("::", "\n")
+                .trim();
     }
 
     private String generateIconUrl(final WowheadSuggestionDTO firstResult) {
