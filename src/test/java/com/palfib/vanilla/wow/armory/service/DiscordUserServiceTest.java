@@ -4,7 +4,6 @@ import com.palfib.vanilla.wow.armory.data.entity.DiscordUser;
 import com.palfib.vanilla.wow.armory.data.wrapper.DiscordUserWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.repository.DiscordUserRepository;
-import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 

@@ -7,8 +7,8 @@ import com.palfib.vanilla.wow.armory.data.wrapper.WowheadSearchResultWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import lombok.val;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriBuilder;
-import reactor.util.StringUtils;
 
 import java.net.URI;
 import java.util.List;

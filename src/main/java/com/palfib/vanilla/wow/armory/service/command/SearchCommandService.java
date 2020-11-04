@@ -7,7 +7,7 @@ import com.palfib.vanilla.wow.armory.service.WowheadSearchService;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.stereotype.Component;
-import reactor.util.StringUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
