@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class WowheadSearchResult {
+public class WowheadSearchResultWrapper {
     private final Integer type;
     private final Integer id;
     private final String name;
@@ -16,7 +16,7 @@ public class WowheadSearchResult {
     private final String details;
 
     @Builder
-    public WowheadSearchResult(final WowheadSuggestionDTO wowheadSuggestionDTO, final String iconUrl, final String details) {
+    public WowheadSearchResultWrapper(final WowheadSuggestionDTO wowheadSuggestionDTO, final String iconUrl, final String details) {
         this.type = wowheadSuggestionDTO.getType();
         this.id = wowheadSuggestionDTO.getId();
         this.name = wowheadSuggestionDTO.getName();

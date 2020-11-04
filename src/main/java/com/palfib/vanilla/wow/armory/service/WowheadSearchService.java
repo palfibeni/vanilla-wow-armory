@@ -1,13 +1,11 @@
 package com.palfib.vanilla.wow.armory.service;
 
+import com.palfib.vanilla.wow.armory.data.dto.WowheadObjectDetailsDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSearchResultDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSuggestionDTO;
-import com.palfib.vanilla.wow.armory.data.dto.WowheadObjectDetailsDTO;
+import com.palfib.vanilla.wow.armory.data.wrapper.WowheadSearchResultWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
-import com.palfib.vanilla.wow.armory.data.wrapper.WowheadSearchResult;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
@@ -24,9 +22,7 @@ import java.util.function.Function;
  * and parsing the responses.
  */
 @Component
-public class WowheadSearchService {
-
-    private static final Logger log = LoggerFactory.getLogger(WowheadSearchService.class);
+public class WowheadSearchService extends AbstractService {
 
     private static final String WOWHEAD_BASE_URL = "https://classic.wowhead.com";
     private static final String SEARCH_PATH = "/search/suggestions-template";
@@ -43,12 +39,12 @@ public class WowheadSearchService {
      * @throws VanillaWowArmoryServiceException if there is no result in the suggestion or the details call,
      *                                          we throw an exception, with user-friendly message.
      */
-    public WowheadSearchResult searchOnWowhead(final String searchText) throws VanillaWowArmoryServiceException {
+    public WowheadSearchResultWrapper searchOnWowhead(final String searchText) throws VanillaWowArmoryServiceException {
         val results = startSearchOnWowhead(searchText);
         val firstResult = results.get(0);
         val objectDTO = fetchObjectDetailsFromWowhead(firstResult.getId(), firstResult.getTypeName());
         val details = parseHtmlTooltip(objectDTO);
-        return WowheadSearchResult.builder()
+        return WowheadSearchResultWrapper.builder()
                 .wowheadSuggestionDTO(firstResult)
                 .iconUrl(generateIconUrl(firstResult))
                 .details(details).build();
@@ -63,7 +59,7 @@ public class WowheadSearchService {
      *                                          we throw an exception, with user-friendly message.
      */
     private List<WowheadSuggestionDTO> startSearchOnWowhead(final String searchText) throws VanillaWowArmoryServiceException {
-        val searchResponse = callGetRestAPI(
+        val searchResponse = executeGetCall(
                 WowheadSearchService.WOWHEAD_BASE_URL,
                 getSuggestionPathBuilderFunction(searchText),
                 WowheadSearchResultDTO.class);
@@ -84,7 +80,7 @@ public class WowheadSearchService {
      *                                          we throw an exception, with user-friendly message.
      */
     private WowheadObjectDetailsDTO fetchObjectDetailsFromWowhead(final Integer objectId, final String typeName) throws VanillaWowArmoryServiceException {
-        val objectDTO = callGetRestAPI(
+        val objectDTO = executeGetCall(
                 WowheadSearchService.WOWHEAD_BASE_URL,
                 getTooltipPathBuilderFunction(typeName, objectId),
                 WowheadObjectDetailsDTO.class);
@@ -95,7 +91,7 @@ public class WowheadSearchService {
     }
 
     /**
-     * Creates a Rest GET http call, with the given parameters.
+     * Executes a Rest GET http call, with the given parameters.
      *
      * @param <T>         result's type.
      * @param baseUrl     URI's baseURL
@@ -103,7 +99,7 @@ public class WowheadSearchService {
      * @param clazz       result's class
      * @return The API call's result will be returned mapped to T type.
      */
-    private <T> T callGetRestAPI(final String baseUrl, final Function<UriBuilder, URI> pathBuilder, final Class<T> clazz) {
+    private <T> T executeGetCall(final String baseUrl, final Function<UriBuilder, URI> pathBuilder, final Class<T> clazz) {
         val client = WebClient.builder().baseUrl(baseUrl).build();
         return client.get()
                 .uri(pathBuilder)
