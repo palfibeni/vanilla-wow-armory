@@ -51,4 +51,8 @@ public class Character {
         this.characterClass = characterWrapper.getCharacterClass();
         this.created = new Date();
     }
+
+    public String toString() {
+        return String.format("%s - %d - %s - %s", name, level, race.getName(), characterClass.getName());
+    }
 }

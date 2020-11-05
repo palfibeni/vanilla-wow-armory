@@ -9,6 +9,7 @@ import lombok.val;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,13 +37,24 @@ public class CharacterService extends AbstractService {
     }
 
     /**
-     * Find Character by name.
+     * Find Character by user.
+     *
+     * @param armoryUser User
+     * @return User's characters.
+     */
+    public List<Character> listByUser(final ArmoryUser armoryUser) {
+        val example = Example.of(Character.builder().armoryUser(armoryUser).build());
+        return characterRepository.findAll(example);
+    }
+
+    /**
+     * Find Character by user, and name.
      *
      * @param armoryUser User
      * @param name Character's name
      * @return Character entity wrapped in Optional.
      */
-    private Optional<Character> findByUserAndName(final ArmoryUser armoryUser, final String name) {
+    public Optional<Character> findByUserAndName(final ArmoryUser armoryUser, final String name) {
         val example = Example.of(Character.builder().armoryUser(armoryUser).name(name).build());
         return characterRepository.findOne(example);
     }
