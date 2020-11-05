@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.palfib.vanilla.wow.armory.service.command.CreateCharacterCommandService;
 import com.palfib.vanilla.wow.armory.service.command.RegisterCommandService;
 import com.palfib.vanilla.wow.armory.service.command.SearchCommandService;
 import lombok.val;
@@ -26,13 +27,16 @@ public class DiscordBotService extends AbstractService {
     private final Environment environment;
     private final SearchCommandService searchCommandService;
     private final RegisterCommandService registerCommandService;
+    private final CreateCharacterCommandService createCharacterCommandService;
 
     public DiscordBotService(final Environment environment,
                              final SearchCommandService searchCommandService,
-                             final RegisterCommandService registerCommandService) {
+                             final RegisterCommandService registerCommandService,
+                             final CreateCharacterCommandService createCharacterCommandService) {
         this.environment = environment;
         this.searchCommandService = searchCommandService;
         this.registerCommandService = registerCommandService;
+        this.createCharacterCommandService = createCharacterCommandService;
     }
 
     /**
@@ -47,7 +51,7 @@ public class DiscordBotService extends AbstractService {
                     .build();
 
             val eventWaiter = new EventWaiter();
-            val commandClient = createCommandClient();
+            val commandClient = createCommandClient(eventWaiter);
             api.addEventListener(eventWaiter, commandClient);
             api.awaitReady();
         } catch (InterruptedException | LoginException e) {
@@ -61,20 +65,21 @@ public class DiscordBotService extends AbstractService {
      *
      * @return newly created CommandClient
      */
-    private CommandClient createCommandClient() {
+    private CommandClient createCommandClient(final EventWaiter eventWaiter) {
         val ccb = new CommandClientBuilder()
                 .setPrefix(environment.getProperty("discordbot.prefix", "$"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setOwnerId(environment.getProperty("discordbot.ownerId"))
                 .setActivity(Activity.listening(environment.getProperty("discordbot.activityMessage", "for Warchief")))
-                .addCommands(generateCommands());
+                .addCommands(generateCommands(eventWaiter));
         return ccb.build();
     }
 
-    private Command[] generateCommands() {
+    private Command[] generateCommands(final EventWaiter eventWaiter) {
         return new Command[]{
                 searchCommandService.generateCommand(),
                 registerCommandService.generateCommand(),
+                createCharacterCommandService.generateCommand(eventWaiter),
         };
     }
 }

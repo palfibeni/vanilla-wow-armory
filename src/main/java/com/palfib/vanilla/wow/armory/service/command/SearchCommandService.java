@@ -15,7 +15,7 @@ import java.util.List;
  * Responsible for the $search command's functionality.
  */
 @Component
-public class SearchCommandService extends AbstractCommandService {
+public class SearchCommandService extends AbstractSimpleCommandService {
 
     private final WowheadSearchService wowheadSearchService;
 
@@ -34,11 +34,6 @@ public class SearchCommandService extends AbstractCommandService {
     }
 
     @Override
-    protected String generateEntryLog(final CommandEvent event) {
-        return String.format("New search initiated from: %s, with: %s", event.getAuthor().getName(), event.getArgs());
-    }
-
-    @Override
     protected void validateArguments(final CommandEvent event) throws VanillaWowArmoryValidationException {
         if (StringUtils.isEmpty(event.getArgs())) {
             throw new VanillaWowArmoryValidationException(log, String.format("%s didn't give me any searchText!", event.getAuthor().getName()));
@@ -47,7 +42,7 @@ public class SearchCommandService extends AbstractCommandService {
 
     @Override
     protected void executeCommand(final CommandEvent event) throws VanillaWowArmoryServiceException {
-        val searchResult = wowheadSearchService.searchOnWowhead(event.getArgs());
+        val searchResult = wowheadSearchService.searchOnWowhead(event.getArgs().trim());
         val response = new EmbedBuilder()
                 .setTitle(String.format("%s searched for: %s (%s)", event.getAuthor().getName(), searchResult.getName(), searchResult.getTypeName()))
                 .setDescription(searchResult.getDetails())

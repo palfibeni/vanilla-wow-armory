@@ -1,35 +1,15 @@
 package com.palfib.vanilla.wow.armory.service.command;
 
-import com.jagrosh.jdautilities.command.Command;
-import com.jagrosh.jdautilities.command.CommandBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.palfib.vanilla.wow.armory.exception.AbstractVanillaWowArmoryException;
-import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryValidationException;
+import com.palfib.vanilla.wow.armory.service.AbstractService;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractCommandService {
-
-    protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * Generates a Command for the CommandClientBuilder
-     *
-     * @return jdautilities Command ready to use.
-     */
-    public Command generateCommand() {
-        return new CommandBuilder().setName(getCommandName())
-                .setBotPermissions(getPermissions())
-                .setGuildOnly(isGuildOnly())
-                .setAliases(getAliases())
-                .build(this::handleCommandExecution);
-    }
+public abstract class AbstractCommandService extends AbstractService {
 
     protected abstract String getCommandName();
 
@@ -45,22 +25,7 @@ public abstract class AbstractCommandService {
         return Collections.emptyList();
     }
 
-    /**
-     * Executes the Command.
-     *
-     * @param event input Command parameters from the user.
-     */
-    private void handleCommandExecution(final CommandEvent event) {
-        try {
-            logUserEntrance(event);
-            validateArguments(event);
-            executeCommand(event);
-        } catch (AbstractVanillaWowArmoryException ex) {
-            event.replyWarning(ex.getMessage());
-        }
-    }
-
-    private void logUserEntrance(final CommandEvent event) {
+    protected void logUserEntrance(final CommandEvent event) {
         log.info(generateEntryLog(event));
     }
 
@@ -72,7 +37,10 @@ public abstract class AbstractCommandService {
 
     }
 
-    protected abstract void executeCommand(final CommandEvent event) throws VanillaWowArmoryServiceException;
+    protected void eventReply(final CommandEvent event, final String message) {
+        log.info(message);
+        event.reply(message);
+    }
 
     protected void eventReply(final CommandEvent event, final MessageEmbed message) {
         log.info(message.getTitle());
