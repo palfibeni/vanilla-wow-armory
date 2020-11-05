@@ -52,11 +52,11 @@ public class ArmoryUserServiceTest {
 
     @Test
     public void testFindByDiscordUserId() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(ARMORY_USER));
+        when(userRepository.findOne(any())).thenReturn(Optional.of(ARMORY_USER));
 
-        userService.findById(USER_ID);
+        userService.findByDiscordUserId(DISCORD_USER_ID);
 
-        verify(userRepository, times(1)).findById(USER_ID);
+        verify(userRepository, times(1)).findOne(any());
     }
 
     @Test
@@ -65,8 +65,7 @@ public class ArmoryUserServiceTest {
 
         userService.saveDiscordUser(DISCORD_USER_WRAPPER);
 
-        verify(userRepository, times(1)).findOne(any());
-        verify(userRepository, times(1)).saveAndFlush(any());
+        verify(userRepository, times(1)).saveAndFlush(ARMORY_USER);
     }
 
     @Test(expected = VanillaWowArmoryServiceException.class)
@@ -75,7 +74,6 @@ public class ArmoryUserServiceTest {
 
         userService.saveDiscordUser(DISCORD_USER_WRAPPER);
 
-        verify(userRepository, times(1)).findOne(any());
         verify(userRepository, times(0)).saveAndFlush(any());
     }
 

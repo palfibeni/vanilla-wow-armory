@@ -34,7 +34,7 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
 
     @Override
     protected String getCommandName() {
-        return "create";
+        return "character-create";
     }
 
     @Override
@@ -59,10 +59,10 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
 
     private Map<String, DiscordQuestionWrapper> generateQuestionWrappers() {
         val map = new HashMap<String, DiscordQuestionWrapper>();
-        map.put(NAME, new DiscordQuestionWrapper("What is your character's name?", this::validateName));
         map.put(RACE, new DiscordQuestionWrapper("What is your character's race?", this::validateRace));
         map.put(CLASS, new DiscordQuestionWrapper("What is your character's class?", this::validateCharacterClass));
         map.put(LEVEL, new DiscordQuestionWrapper("What is your character's level?", this::validateLevel));
+        map.put(NAME, new DiscordQuestionWrapper("What is your character's name?", this::validateName));
         return map;
     }
 
@@ -118,7 +118,7 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
             val characterWrapper = CharacterWrapper.builder()
                     .discordUserId(author.getId())
                     .discordUsername(author.getName())
-                    .name(questionSequenceWrapper.getQuestions().get(NAME).getAnswer())
+                    .name(StringUtils.capitalize(questionSequenceWrapper.getQuestions().get(NAME).getAnswer()))
                     .race(Race.parseAsEnum(questionSequenceWrapper.getQuestions().get(RACE).getAnswer()))
                     .characterClass(CharacterClass.parseAsEnum(questionSequenceWrapper.getQuestions().get(CLASS).getAnswer()))
                     .level(Long.parseLong(questionSequenceWrapper.getQuestions().get(LEVEL).getAnswer()))

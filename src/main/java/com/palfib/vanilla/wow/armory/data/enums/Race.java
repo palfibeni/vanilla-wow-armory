@@ -24,7 +24,8 @@ public enum Race {
 
     public static Race parseAsEnum(final String str) {
         for (Race race : Race.values()) {
-            if (race.name().equalsIgnoreCase(str.replaceAll(" ", "_")))
+            if (race.name().replaceAll("_", "")
+                    .equalsIgnoreCase(str.replaceAll("[\\s_-]+", "")))
                 return race;
         }
         return null;

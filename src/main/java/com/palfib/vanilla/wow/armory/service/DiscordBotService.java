@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.palfib.vanilla.wow.armory.service.command.CreateCharacterCommandService;
+import com.palfib.vanilla.wow.armory.service.command.ListCharacterCommandService;
 import com.palfib.vanilla.wow.armory.service.command.RegisterCommandService;
 import com.palfib.vanilla.wow.armory.service.command.SearchCommandService;
 import lombok.val;
@@ -28,15 +29,18 @@ public class DiscordBotService extends AbstractService {
     private final SearchCommandService searchCommandService;
     private final RegisterCommandService registerCommandService;
     private final CreateCharacterCommandService createCharacterCommandService;
+    private final ListCharacterCommandService listCharacterCommandService;
 
     public DiscordBotService(final Environment environment,
                              final SearchCommandService searchCommandService,
                              final RegisterCommandService registerCommandService,
-                             final CreateCharacterCommandService createCharacterCommandService) {
+                             final CreateCharacterCommandService createCharacterCommandService,
+                             final ListCharacterCommandService listCharacterCommandService) {
         this.environment = environment;
         this.searchCommandService = searchCommandService;
         this.registerCommandService = registerCommandService;
         this.createCharacterCommandService = createCharacterCommandService;
+        this.listCharacterCommandService = listCharacterCommandService;
     }
 
     /**
@@ -80,6 +84,7 @@ public class DiscordBotService extends AbstractService {
                 searchCommandService.generateCommand(),
                 registerCommandService.generateCommand(),
                 createCharacterCommandService.generateCommand(eventWaiter),
+                listCharacterCommandService.generateCommand(),
         };
     }
 }
