@@ -2,10 +2,10 @@
 
 ## Features
 - Invitable Discord bot.
-- Anonymus users will have access:
+- Anonymus users will have access to:
   - Search for various ingame objects with command: $search searchText*
   - Register to the application with command: $register
-- Registered users will access to other commands:
+- Registered users will access to:
   - Create character with command: $character-create
   - List created characters with command: $character-list [@userMention]
 
