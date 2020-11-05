@@ -2,7 +2,12 @@
 
 ## Features
 - Invitable Discord bot.
-- Search for various ingame objects.
+- Anonymus users will have access:
+-- Search for various ingame objects with command: $search searchText*
+-- Register to the application with command: $register
+- Registered users will access to other commands:
+-- Create character with command: $character-create
+-- List created characters with command: $character-list [@userMention]
 
 More planned feature here: [Vanilla WoW Armory Trello board](https://trello.com/b/sDiDwVVN/vanilla-wow-armory)
 
