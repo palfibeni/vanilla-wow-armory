@@ -5,10 +5,12 @@
 
 -- Anonymus users will have access to:
   | Command             | Description |
+  | ------------------- | ----------- |
   | $search searchText* | Search for various ingame objects |
   | $register           | Register to the application |
 -- Registered users will access to:
   | Command                         | Description |
+  | ------------------------------- | ----------- |
   | $character-create               | Create character, this will initiate a questions, which the user have 15 second to answer each. |
   | $character-list [@userMention]  | List self, or mentioned user's characters. |
 
