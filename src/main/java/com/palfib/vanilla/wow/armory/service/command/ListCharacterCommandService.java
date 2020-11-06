@@ -9,6 +9,7 @@ import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,6 +27,12 @@ public class ListCharacterCommandService extends AbstractSimpleCommandService {
     @Override
     protected String getCommandName() {
         return "character-list";
+    }
+
+
+    @Override
+    protected List<String> getAliases() {
+        return List.of("cl", "list");
     }
 
     @Override

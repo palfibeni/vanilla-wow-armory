@@ -30,7 +30,7 @@ public class SearchCommandService extends AbstractSimpleCommandService {
 
     @Override
     protected List<String> getAliases() {
-        return List.of("saerch", "saehrc", "saerhc", "searhc", "seahrc");
+        return List.of("s");
     }
 
     @Override

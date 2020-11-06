@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -35,6 +36,11 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
     @Override
     protected String getCommandName() {
         return "character-create";
+    }
+
+    @Override
+    protected List<String> getAliases() {
+        return List.of("cc", "create");
     }
 
     @Override
@@ -84,14 +90,14 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
 
     private String validateRace(final String race) {
         if (Race.parseAsEnum(race) == null) {
-            return "Race cannot be empty.";
+            return "Given race is not valid.";
         }
         return null;
     }
 
     private String validateCharacterClass(final String characterClass) {
         if (CharacterClass.parseAsEnum(characterClass) == null) {
-            return "CharacterClass cannot be empty.";
+            return "Given class is not valid.";
         }
         return null;
     }
