@@ -34,6 +34,11 @@ public class SearchCommandService extends AbstractSimpleCommandService {
     }
 
     @Override
+    protected String getHelp() {
+        return "Search for various ingame objects";
+    }
+
+    @Override
     protected void validateArguments(final CommandEvent event) throws VanillaWowArmoryValidationException {
         if (StringUtils.isEmpty(event.getArgs())) {
             throw new VanillaWowArmoryValidationException(log, String.format("%s didn't give me any searchText!", event.getAuthor().getName()));

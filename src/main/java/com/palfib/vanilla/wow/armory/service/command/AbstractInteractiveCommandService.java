@@ -29,6 +29,7 @@ public abstract class AbstractInteractiveCommandService extends AbstractCommandS
                 .setBotPermissions(getPermissions())
                 .setGuildOnly(isGuildOnly())
                 .setAliases(getAliases())
+                .setHelp(getHelp())
                 .build(event -> handleCommandExecution(event, eventWaiter));
     }
 

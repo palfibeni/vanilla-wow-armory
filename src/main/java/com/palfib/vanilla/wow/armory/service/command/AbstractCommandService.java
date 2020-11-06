@@ -25,6 +25,8 @@ public abstract class AbstractCommandService extends AbstractService {
         return Collections.emptyList();
     }
 
+    protected abstract String getHelp();
+
     protected void logUserEntrance(final CommandEvent event) {
         log.info(generateEntryLog(event));
     }

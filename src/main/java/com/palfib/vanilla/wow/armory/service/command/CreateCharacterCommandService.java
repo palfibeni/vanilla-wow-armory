@@ -44,7 +44,12 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
     }
 
     @Override
-    protected void validateArguments(CommandEvent event) throws VanillaWowArmoryValidationException {
+    protected String getHelp() {
+        return "Create character, this will initiate a questions, which the user have 15 second to answer each";
+    }
+
+    @Override
+    protected void validateArguments(final CommandEvent event) throws VanillaWowArmoryValidationException {
         val args = event.getArgs().trim().replaceAll("\\s+", " ").split(" ");
         val argList = Arrays.asList(args);
         if (argList.size() > 4) {
