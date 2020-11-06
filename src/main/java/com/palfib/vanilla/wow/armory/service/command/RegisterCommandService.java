@@ -34,6 +34,11 @@ public class RegisterCommandService extends AbstractSimpleCommandService {
     }
 
     @Override
+    protected String getHelp() {
+        return "Register to the application";
+    }
+
+    @Override
     protected void executeCommand(final CommandEvent event) throws VanillaWowArmoryServiceException {
         val author = event.getAuthor();
         val userWrapper = DiscordUserWrapper.builder()

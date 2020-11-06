@@ -74,7 +74,7 @@ public class DiscordBotService extends AbstractService {
                 .setPrefix(environment.getProperty("discordbot.prefix", "$"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setOwnerId(environment.getProperty("discordbot.ownerId"))
-                .setActivity(Activity.listening(environment.getProperty("discordbot.activityMessage", "for Warchief")))
+                .setActivity(Activity.listening(environment.getProperty("discordbot.activityMessage", "$help")))
                 .addCommands(generateCommands(eventWaiter));
         return ccb.build();
     }

@@ -4,16 +4,19 @@
 ### Invitable Discord bot with commands:
 
 - Anonymus users will have access to:
-  | Command             | Description |
-  | ------------------- | ----------- |
-  | $search searchText* | Search for various ingame objects |
-  | $register           | Register to the application |
+
+  | Command | Description | Aliases|
+  |: ------ |: ---------- |: ----- |
+  | $help               | Shows information about the use of the bot    | h |
+  | $search searchText* | Search for various ingame objects             | s |
+  | $register           | Register to the application                   | reg, r |
   
 - Registered users will access to:
-  | Command                         | Description |
-  | ------------------------------- | ----------- |
-  | $character-create               | Create character, this will initiate a questions, which the user have 15 second to answer each. |
-  | $character-list [@userMention]  | List self, or mentioned user's characters. |
+
+  | Command | Description | Aliases|
+  |: ------ |: ---------- |: ----- |
+  | $character-create               | Create character, this will initiate a questions, which the user have 15 second to answer each.   | create, cc |
+  | $character-list [@userMention]  | List self, or mentioned user's characters.                                                        | list, l |
 
 More planned feature here: [Vanilla WoW Armory Trello board](https://trello.com/b/sDiDwVVN/vanilla-wow-armory)
 

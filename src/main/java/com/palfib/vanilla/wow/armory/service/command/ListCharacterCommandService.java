@@ -36,6 +36,11 @@ public class ListCharacterCommandService extends AbstractSimpleCommandService {
     }
 
     @Override
+    protected String getHelp() {
+        return "List self, or mentioned user's characters";
+    }
+
+    @Override
     protected void executeCommand(final CommandEvent event) throws VanillaWowArmoryServiceException {
         val discordUser = event.getMessage().getMentionedUsers().stream()
                 .findFirst()

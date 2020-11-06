@@ -18,6 +18,7 @@ public abstract class AbstractSimpleCommandService extends AbstractCommandServic
                 .setBotPermissions(getPermissions())
                 .setGuildOnly(isGuildOnly())
                 .setAliases(getAliases())
+                .setHelp(getHelp())
                 .build(this::handleCommandExecution);
     }
 
