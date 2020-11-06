@@ -8,6 +8,8 @@ import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Responsible for the $register command's functionality.
  */
@@ -24,6 +26,11 @@ public class RegisterCommandService extends AbstractSimpleCommandService {
     @Override
     protected String getCommandName() {
         return "register";
+    }
+
+    @Override
+    protected List<String> getAliases() {
+        return List.of("r", "reg");
     }
 
     @Override
