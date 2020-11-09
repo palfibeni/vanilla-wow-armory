@@ -6,7 +6,7 @@
 - Anonymus users will have access to:
 
   | Command | Description | Aliases|
-  |: ------ |: ---------- |: ----- |
+  | ------------------- | --------------------------------------------- | ----- |
   | $help               | Shows information about the use of the bot    | h |
   | $search searchText* | Search for various ingame objects             | s |
   | $register           | Register to the application                   | reg, r |
@@ -14,7 +14,7 @@
 - Registered users will access to:
 
   | Command | Description | Aliases|
-  |: ------ |: ---------- |: ----- |
+  | ------------------------------- | ------------------------------------------------------------------------------------------------- | ---------- |
   | $character-create               | Create character, this will initiate a questions, which the user have 15 second to answer each.   | create, cc |
   | $character-list [@userMention]  | List self, or mentioned user's characters.                                                        | list, l |
 
