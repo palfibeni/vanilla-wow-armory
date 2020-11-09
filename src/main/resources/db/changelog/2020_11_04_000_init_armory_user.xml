@@ -13,7 +13,7 @@
             <column name="username" type="VARCHAR(255)"/>
             <column name="discord_user_id" type="VARCHAR(255)"/>
             <column name="discord_server_id" type="VARCHAR(255)"/>
-            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+            <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

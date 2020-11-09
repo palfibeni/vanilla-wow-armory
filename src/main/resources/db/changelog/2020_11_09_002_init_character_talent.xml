@@ -13,7 +13,7 @@
             <column name="character_id" type="BIGINT"/>
             <column name="name" type="VARCHAR(255)"/>
             <column name="talent" type="VARCHAR(255)"/>
-            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+            <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
         </createTable>
     </changeSet>
     <changeSet author="palfib" id="202011041905-2">
