@@ -17,6 +17,7 @@
   | ------------------------------- | ------------------------------------------------------------------------------------------------- | ---------- |
   | $character-create               | Create character, this will initiate a questions, which the user have 15 second to answer each.   | create, cc |
   | $character-list [@userMention]  | List self, or mentioned user's characters.                                                        | list, l |
+  | $character-talent [charName]    | Set character's talent                                                                            | talent, ct |
 
 More planned feature here: [Vanilla WoW Armory Trello board](https://trello.com/b/sDiDwVVN/vanilla-wow-armory)
 
