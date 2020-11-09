@@ -8,6 +8,7 @@ import com.palfib.vanilla.wow.armory.repository.CharacterRepository;
 import lombok.val;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +56,7 @@ public class CharacterService extends AbstractService {
      * @return Character entity wrapped in Optional.
      */
     public Optional<Character> findByUserAndName(final ArmoryUser armoryUser, final String name) {
-        val example = Example.of(Character.builder().armoryUser(armoryUser).name(name).build());
+        val example = Example.of(Character.builder().armoryUser(armoryUser).name(StringUtils.capitalize(name)).build());
         return characterRepository.findOne(example);
     }
 
