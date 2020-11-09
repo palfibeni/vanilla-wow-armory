@@ -1,4 +1,4 @@
-package com.palfib.vanilla.wow.armory.service;
+package com.palfib.vanilla.wow.armory.service.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

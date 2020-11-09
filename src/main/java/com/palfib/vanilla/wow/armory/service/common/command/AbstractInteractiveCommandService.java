@@ -1,4 +1,4 @@
-package com.palfib.vanilla.wow.armory.service.command;
+package com.palfib.vanilla.wow.armory.service.common.command;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandBuilder;

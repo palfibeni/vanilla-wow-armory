@@ -1,11 +1,11 @@
-package com.palfib.vanilla.wow.armory.service.command;
+package com.palfib.vanilla.wow.armory.service.armoryuser.command;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.palfib.vanilla.wow.armory.data.wrapper.DiscordUserWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
-import com.palfib.vanilla.wow.armory.service.ArmoryUserService;
+import com.palfib.vanilla.wow.armory.service.armoryuser.ArmoryUserService;
+import com.palfib.vanilla.wow.armory.service.common.command.AbstractSimpleCommandService;
 import lombok.val;
-import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

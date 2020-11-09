@@ -1,8 +1,8 @@
-package com.palfib.vanilla.wow.armory.service.command;
+package com.palfib.vanilla.wow.armory.service.common.command;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryValidationException;
-import com.palfib.vanilla.wow.armory.service.AbstractService;
+import com.palfib.vanilla.wow.armory.service.common.AbstractService;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;

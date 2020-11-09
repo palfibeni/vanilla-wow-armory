@@ -1,9 +1,9 @@
-package com.palfib.vanilla.wow.armory.service.command;
+package com.palfib.vanilla.wow.armory.service.common.command;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryValidationException;
-import com.palfib.vanilla.wow.armory.service.WowheadSearchService;
+import com.palfib.vanilla.wow.armory.service.common.WowheadSearchService;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.stereotype.Component;

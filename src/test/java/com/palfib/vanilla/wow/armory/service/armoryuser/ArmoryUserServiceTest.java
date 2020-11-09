@@ -1,9 +1,10 @@
-package com.palfib.vanilla.wow.armory.service;
+package com.palfib.vanilla.wow.armory.service.armoryuser;
 
 import com.palfib.vanilla.wow.armory.data.entity.ArmoryUser;
 import com.palfib.vanilla.wow.armory.data.wrapper.DiscordUserWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.repository.ArmoryUserRepository;
+import com.palfib.vanilla.wow.armory.service.armoryuser.ArmoryUserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

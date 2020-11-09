@@ -1,4 +1,4 @@
-package com.palfib.vanilla.wow.armory.service;
+package com.palfib.vanilla.wow.armory.service.common;
 
 import com.palfib.vanilla.wow.armory.data.dto.WowheadObjectDetailsDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSearchResultDTO;

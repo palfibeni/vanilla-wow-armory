@@ -1,4 +1,4 @@
-package com.palfib.vanilla.wow.armory.service;
+package com.palfib.vanilla.wow.armory.service.common;
 
 import lombok.val;
 import org.springframework.stereotype.Component;

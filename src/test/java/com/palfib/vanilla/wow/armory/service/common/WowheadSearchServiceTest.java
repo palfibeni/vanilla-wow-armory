@@ -1,9 +1,11 @@
-package com.palfib.vanilla.wow.armory.service;
+package com.palfib.vanilla.wow.armory.service.common;
 
 import com.palfib.vanilla.wow.armory.data.dto.WowheadObjectDetailsDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSearchResultDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSuggestionDTO;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
+import com.palfib.vanilla.wow.armory.service.common.HttpService;
+import com.palfib.vanilla.wow.armory.service.common.WowheadSearchService;
 import lombok.val;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -23,7 +25,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class WowheadSearchServiceTest {
 
-    private static final String SEARCH_TEXT = "boner";
+    private static final String SEARCH_TEXT = "bonereaver";
     private static final String OBJECT_NAME = "Bonereaver's Edge";
     private static final Integer OBJECT_ID = 123;
     private static final String TYPE_NAME = "Item";

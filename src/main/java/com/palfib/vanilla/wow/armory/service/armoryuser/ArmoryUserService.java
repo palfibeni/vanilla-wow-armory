@@ -1,9 +1,10 @@
-package com.palfib.vanilla.wow.armory.service;
+package com.palfib.vanilla.wow.armory.service.armoryuser;
 
 import com.palfib.vanilla.wow.armory.data.entity.ArmoryUser;
 import com.palfib.vanilla.wow.armory.data.wrapper.DiscordUserWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.repository.ArmoryUserRepository;
+import com.palfib.vanilla.wow.armory.service.common.AbstractService;
 import lombok.val;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;

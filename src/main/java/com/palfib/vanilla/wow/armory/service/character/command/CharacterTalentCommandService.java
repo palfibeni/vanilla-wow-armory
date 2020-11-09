@@ -1,4 +1,4 @@
-package com.palfib.vanilla.wow.armory.service.command;
+package com.palfib.vanilla.wow.armory.service.character.command;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
@@ -7,8 +7,10 @@ import com.palfib.vanilla.wow.armory.data.wrapper.DiscordQuestionSequenceWrapper
 import com.palfib.vanilla.wow.armory.data.wrapper.DiscordQuestionWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryValidationException;
-import com.palfib.vanilla.wow.armory.service.CharacterService;
-import com.palfib.vanilla.wow.armory.service.CharacterTalentService;
+import com.palfib.vanilla.wow.armory.service.character.CharacterService;
+import com.palfib.vanilla.wow.armory.service.character.CharacterTalentService;
+import com.palfib.vanilla.wow.armory.service.common.command.AbstractInteractiveCommandService;
+import com.palfib.vanilla.wow.armory.service.common.command.DiscordUserService;
 import lombok.val;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

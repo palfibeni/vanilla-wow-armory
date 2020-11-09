@@ -1,10 +1,10 @@
-package com.palfib.vanilla.wow.armory.service.command;
+package com.palfib.vanilla.wow.armory.service.common.command;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.palfib.vanilla.wow.armory.data.entity.ArmoryUser;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
-import com.palfib.vanilla.wow.armory.service.AbstractService;
-import com.palfib.vanilla.wow.armory.service.ArmoryUserService;
+import com.palfib.vanilla.wow.armory.service.common.AbstractService;
+import com.palfib.vanilla.wow.armory.service.armoryuser.ArmoryUserService;
 import lombok.val;
 import net.dv8tion.jda.api.entities.User;
 import org.springframework.stereotype.Component;
