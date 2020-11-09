@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet author="palfib" id="202011091717-1">
+        <createTable tableName="character_talent">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="characterTalentPK"/>
+            </column>
+            <column name="character_id" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="talent" type="VARCHAR(255)"/>
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="palfib" id="202011041905-2">
+        <addForeignKeyConstraint baseColumnNames="character_id" baseTableName="character_talent" constraintName="FK_character_character_talent" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="character"/>
+    </changeSet>
+</databaseChangeLog>

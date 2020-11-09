@@ -14,11 +14,14 @@ import lombok.val;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Responsible for the $character-create command's functionality.
+ */
 @Component
 public class CreateCharacterCommandService extends AbstractInteractiveCommandService {
 
@@ -50,8 +53,7 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
 
     @Override
     protected void validateArguments(final CommandEvent event) throws VanillaWowArmoryValidationException {
-        val args = event.getArgs().trim().replaceAll("\\s+", " ").split(" ");
-        val argList = Arrays.asList(args);
+        val argList = parseArguments(event);
         if (argList.size() > 4) {
             throw new VanillaWowArmoryValidationException(log, "Too many arguments");
         }
@@ -62,35 +64,24 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
         val questionSequenceWrapper = DiscordQuestionSequenceWrapper.builder()
                 .event(event)
                 .eventWaiter(eventWaiter)
-                .questions(generateQuestionWrappers())
+                .questions(generateQuestionWrappers(parseArguments(event)))
                 .build();
 
         askQuestionSequence(questionSequenceWrapper, this::handleAnswers);
     }
 
-    private Map<String, DiscordQuestionWrapper> generateQuestionWrappers() {
+    private Map<String, DiscordQuestionWrapper> generateQuestionWrappers(final List<String> argList) {
         val map = new HashMap<String, DiscordQuestionWrapper>();
         map.put(RACE, new DiscordQuestionWrapper("What is your character's race?", this::validateRace));
         map.put(CLASS, new DiscordQuestionWrapper("What is your character's class?", this::validateCharacterClass));
         map.put(LEVEL, new DiscordQuestionWrapper("What is your character's level?", this::validateLevel));
-        map.put(NAME, new DiscordQuestionWrapper("What is your character's name?", this::validateName));
+        map.put(NAME, new DiscordQuestionWrapper("What is your character's name?", this::validateSimpleName));
+        argList.forEach(argument -> map.values().stream()
+                .filter(question -> question.isFreeToAsk() && StringUtils.isEmpty(question.getValidator().apply(argument)))
+                .findFirst()
+                .ifPresent(question -> question.setAnswer(argument))
+        );
         return map;
-    }
-
-    private String validateName(final String name) {
-        if (StringUtils.isEmpty(name)) {
-            return "Name cannot be empty!";
-        }
-        if (StringUtils.containsWhitespace(name)) {
-            return "Name cannot contain whitespace";
-        }
-        if (name.length() < 2) {
-            return "Name cannot have less then 2 character.";
-        }
-        if (name.length() > 12) {
-            return "Name cannot have more then 12 character.";
-        }
-        return null;
     }
 
     private String validateRace(final String race) {

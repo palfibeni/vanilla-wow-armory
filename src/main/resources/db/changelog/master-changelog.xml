@@ -8,4 +8,5 @@
 
     <include file="db/changelog/2020_11_04_000_init_armory_user.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/2020_11_04_001_init_character.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/2020_11_09_002_init_character_talent.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
