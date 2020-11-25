@@ -4,8 +4,6 @@ import com.palfib.vanilla.wow.armory.data.dto.WowheadObjectDetailsDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSearchResultDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSuggestionDTO;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
-import com.palfib.vanilla.wow.armory.service.common.HttpService;
-import com.palfib.vanilla.wow.armory.service.common.WowheadSearchService;
 import lombok.val;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -53,6 +51,7 @@ public class WowheadSearchServiceTest {
         when(httpService.get(anyString(), any(), eq(WowheadSearchResultDTO.class))).thenReturn(mockSearchResult);
 
         val mockObjectDetails = WowheadObjectDetailsDTO.builder()
+                .name(OBJECT_NAME)
                 .tooltip(TOOLTIP_HTML)
                 .build();
         when(httpService.get(anyString(), any(), eq(WowheadObjectDetailsDTO.class))).thenReturn(mockObjectDetails);

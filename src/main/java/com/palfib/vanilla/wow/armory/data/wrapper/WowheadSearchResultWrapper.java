@@ -4,6 +4,8 @@ import com.palfib.vanilla.wow.armory.data.dto.WowheadSuggestionDTO;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class WowheadSearchResultWrapper {
     private final Integer type;
@@ -14,9 +16,10 @@ public class WowheadSearchResultWrapper {
     private final Integer quality;
     private final String iconUrl;
     private final String details;
+    private final List<BossDetailWrapper> bossDetailWrappers;
 
     @Builder
-    public WowheadSearchResultWrapper(final WowheadSuggestionDTO wowheadSuggestionDTO, final String iconUrl, final String details) {
+    public WowheadSearchResultWrapper(final WowheadSuggestionDTO wowheadSuggestionDTO, final String iconUrl, final String details, final List<BossDetailWrapper> bossDetailWrappers) {
         this.type = wowheadSuggestionDTO.getType();
         this.id = wowheadSuggestionDTO.getId();
         this.name = wowheadSuggestionDTO.getName();
@@ -25,5 +28,6 @@ public class WowheadSearchResultWrapper {
         this.quality = wowheadSuggestionDTO.getQuality();
         this.iconUrl = iconUrl;
         this.details = details;
+        this.bossDetailWrappers = bossDetailWrappers;
     }
 }

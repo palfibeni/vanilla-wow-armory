@@ -21,7 +21,10 @@ public class HttpService {
      * @return The API call's result will be returned mapped to T type.
      */
     public <T> T get(final String baseUrl, final Function<UriBuilder, URI> pathBuilder, final Class<T> clazz) {
-        val client = WebClient.builder().baseUrl(baseUrl).build();
+        val client = WebClient.builder()
+                .baseUrl(baseUrl)
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
+                .build();
         return client.get()
                 .uri(pathBuilder)
                 .retrieve()
