@@ -8,7 +8,6 @@
   | Command | Description | Aliases|
   | ------------------- | --------------------------------------------- | ----- |
   | $help               | Shows information about the use of the bot    | h |
-  | $search searchText* | Search for various ingame objects             | s |
   | $register           | Register to the application                   | reg, r |
   
 - Registered users will access to:
@@ -19,7 +18,6 @@
   | $character-list [@userMention]  | List self, or mentioned user's characters.                                                        | list, l |
   | $character-talent [charName]    | Set character's talent                                                                            | talent, ct |
 
-More planned feature here: [Vanilla WoW Armory Trello board](https://trello.com/b/sDiDwVVN/vanilla-wow-armory)
 
 ## Installation
 Currently the bot is not deployed, so you have to run it on your computer, using MAVEN to install, build, and run it.
