@@ -64,27 +64,20 @@ public class CharacterDeleteCommandService extends AbstractInteractiveCommandSer
     }
 
     @Override
-    protected void executeCommand(final CommandEvent event, final EventWaiter eventWaiter) throws VanillaWowArmoryServiceException {
-        val currentUser = discordUserService.getCurrentUser(event);
+    protected void executeCommand(final CommandEvent event, final EventWaiter eventWaiter) {
         val arguments = parseArguments(event);
-        val characterName = arguments.remove(0);
-        val optCharacter = characterService.findByUserAndName(currentUser, characterName);
-        if (optCharacter.isEmpty()) {
-            throw new VanillaWowArmoryServiceException(log, String.format("%s user has no character named %s.", currentUser.getUsername(), characterName));
-        }
         val questionSequenceWrapper = DiscordQuestionSequenceWrapper.builder()
                 .event(event)
                 .eventWaiter(eventWaiter)
-                .questions(generateQuestionWrappers(characterName, arguments))
+                .questions(generateQuestionWrappers(arguments))
                 .build();
 
         askQuestionSequence(questionSequenceWrapper, this::handleAnswers);
     }
 
-    private Map<String, DiscordQuestionWrapper> generateQuestionWrappers(final String characterName, final List<String> argList) {
+    private Map<String, DiscordQuestionWrapper> generateQuestionWrappers(final List<String> argList) {
         val map = new HashMap<String, DiscordQuestionWrapper>();
         map.put(CHARACTER_NAME, new DiscordQuestionWrapper("What is your character's name?", characterValidatorService::validateSimpleName));
-        map.get(CHARACTER_NAME).setAnswer(characterName);
         argList.forEach(argument -> map.values().stream()
                 .filter(question -> question.isFreeToAsk() && StringUtils.isEmpty(question.getValidator().apply(argument)))
                 .findFirst()

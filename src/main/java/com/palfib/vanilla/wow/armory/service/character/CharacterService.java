@@ -91,7 +91,7 @@ public class CharacterService extends AbstractService {
         }
         val character = findByUserAndName(optionalUser.get(), characterNameWrapper.getCharacterName());
         if (character.isEmpty()) {
-            throw new VanillaWowArmoryServiceException(log, String.format("%s hasn't registered yet, please use the $register command.", characterNameWrapper.getDiscordUsername()));
+            throw new VanillaWowArmoryServiceException(log, String.format("%s user has no character named %s.", characterNameWrapper.getDiscordUsername(), characterNameWrapper.getCharacterName()));
         }
         characterRepository.delete(character.get());
     }
