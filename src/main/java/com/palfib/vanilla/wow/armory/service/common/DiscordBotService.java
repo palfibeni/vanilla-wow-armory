@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.palfib.vanilla.wow.armory.service.armoryuser.command.RegisterCommandService;
+import com.palfib.vanilla.wow.armory.service.character.command.CharacterDeleteCommandService;
 import com.palfib.vanilla.wow.armory.service.character.command.CharacterTalentCommandService;
 import com.palfib.vanilla.wow.armory.service.character.command.CreateCharacterCommandService;
 import com.palfib.vanilla.wow.armory.service.character.command.ListCharacterCommandService;
@@ -32,19 +33,22 @@ public class DiscordBotService extends AbstractService {
     private final CreateCharacterCommandService createCharacterCommandService;
     private final ListCharacterCommandService listCharacterCommandService;
     private final CharacterTalentCommandService characterTalentCommandService;
+    private final CharacterDeleteCommandService characterDeleteCommandService;
 
     public DiscordBotService(final Environment environment,
                              final SearchCommandService searchCommandService,
                              final RegisterCommandService registerCommandService,
                              final CreateCharacterCommandService createCharacterCommandService,
                              final ListCharacterCommandService listCharacterCommandService,
-                             final CharacterTalentCommandService characterTalentCommandService) {
+                             final CharacterTalentCommandService characterTalentCommandService,
+                             final CharacterDeleteCommandService characterDeleteCommandService) {
         this.environment = environment;
         this.searchCommandService = searchCommandService;
         this.registerCommandService = registerCommandService;
         this.createCharacterCommandService = createCharacterCommandService;
         this.listCharacterCommandService = listCharacterCommandService;
         this.characterTalentCommandService = characterTalentCommandService;
+        this.characterDeleteCommandService = characterDeleteCommandService;
     }
 
     /**
@@ -90,6 +94,7 @@ public class DiscordBotService extends AbstractService {
                 createCharacterCommandService.generateCommand(eventWaiter),
                 listCharacterCommandService.generateCommand(),
                 characterTalentCommandService.generateCommand(eventWaiter),
+                characterDeleteCommandService.generateCommand(eventWaiter),
         };
     }
 }

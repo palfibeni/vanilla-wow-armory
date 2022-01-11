@@ -50,7 +50,7 @@ public class Character {
 
     public Character(final ArmoryUser armoryUser, final CharacterWrapper characterWrapper) {
         this.armoryUser = armoryUser;
-        this.name = characterWrapper.getName();
+        this.name = characterWrapper.getCharacterName();
         this.level = characterWrapper.getLevel();
         this.race = characterWrapper.getRace();
         this.characterClass = characterWrapper.getCharacterClass();

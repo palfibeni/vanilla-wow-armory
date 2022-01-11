@@ -4,13 +4,15 @@ import lombok.*;
 
 @Setter
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class CharacterTalentWrapper {
-    private String discordUserId;
-    private String discordUsername;
-    private String characterName;
+public class CharacterTalentWrapper extends CharacterNameWrapper {
     private String name;
     private String talent;
+
+    @Builder(builderMethodName = "CharacterTalentWrapperBuilder")
+    public CharacterTalentWrapper(final String discordUserId, final String discordUsername, final String characterName, final String name, final String talent) {
+        super(discordUserId, discordUsername, characterName);
+        this.name = name;
+        this.talent = talent;
+    }
 }

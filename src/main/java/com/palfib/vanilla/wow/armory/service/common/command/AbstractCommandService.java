@@ -57,20 +57,4 @@ public abstract class AbstractCommandService extends AbstractService {
         log.info(message.getTitle());
         event.reply(message);
     }
-
-    protected String validateSimpleName(final String name) {
-        if (StringUtils.isEmpty(name)) {
-            return "Name cannot be empty!";
-        }
-        if (StringUtils.containsWhitespace(name)) {
-            return "Name cannot contain whitespace";
-        }
-        if (name.length() < 2) {
-            return "Name cannot have less then 2 character.";
-        }
-        if (name.length() > 15) {
-            return "Name cannot have more then 15 character.";
-        }
-        return null;
-    }
 }

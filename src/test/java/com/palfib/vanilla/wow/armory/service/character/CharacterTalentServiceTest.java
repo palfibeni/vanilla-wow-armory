@@ -40,9 +40,9 @@ public class CharacterTalentServiceTest {
     private static final ArmoryUser ARMORY_USER = new ArmoryUser(DISCORD_USER_WRAPPER);
 
     private static final String CHARACTER_NAME = "FANCY_CHARACTERNAME";
-    private static final CharacterWrapper CHARACTER_WRAPPER = CharacterWrapper.builder()
+    private static final CharacterWrapper CHARACTER_WRAPPER = CharacterWrapper.CharacterWrapperBuilder()
             .discordUserId(DISCORD_USER_ID)
-            .name(CHARACTER_NAME)
+            .characterName(CHARACTER_NAME)
             .race(Race.HUMAN)
             .characterClass(CharacterClass.WARRIOR)
             .level(60L)
@@ -50,7 +50,7 @@ public class CharacterTalentServiceTest {
     private static final Character CHARACTER = new Character(ARMORY_USER, CHARACTER_WRAPPER);
     private static final Long CHARACTER_TALENT_ID = 345L;
     private static final String TALENT_NAME = "FANCY_TALENT_NAME";
-    private final static CharacterTalentWrapper CHARACTER_TALENT_WRAPPER = CharacterTalentWrapper.builder()
+    private final static CharacterTalentWrapper CHARACTER_TALENT_WRAPPER = CharacterTalentWrapper.CharacterTalentWrapperBuilder()
             .characterName(CHARACTER_NAME)
             .discordUserId(DISCORD_USER_ID)
             .name(TALENT_NAME)

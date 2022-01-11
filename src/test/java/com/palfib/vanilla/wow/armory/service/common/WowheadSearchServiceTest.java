@@ -1,5 +1,6 @@
 package com.palfib.vanilla.wow.armory.service.common;
 
+import com.palfib.vanilla.wow.armory.data.enums.WowHeadResultType;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadObjectDetailsDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSearchResultDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSuggestionDTO;
@@ -26,12 +27,12 @@ public class WowheadSearchServiceTest {
     private static final String SEARCH_TEXT = "bonereaver";
     private static final String OBJECT_NAME = "Bonereaver's Edge";
     private static final Integer OBJECT_ID = 123;
-    private static final String TYPE_NAME = "Item";
+    private static final WowHeadResultType TYPE = WowHeadResultType.ITEM;
     private static final String TOOLTIP_FIRST_LINE = "Detailed tooltip to an awesome sword";
     private static final String TOOLTIP_SECOND_LINE = "an other line of description";
     private static final String TOOLTIP_HTML = "<div>" + TOOLTIP_FIRST_LINE + "</div>" + "<br>" + "<div>" + TOOLTIP_SECOND_LINE + "</div>";
 
-    private static final List<WowheadSuggestionDTO> SUGGESTIONS = Lists.list(WowheadSuggestionDTO.builder().name(OBJECT_NAME).id(OBJECT_ID).typeName(TYPE_NAME).build());
+    private static final List<WowheadSuggestionDTO> SUGGESTIONS = Lists.list(WowheadSuggestionDTO.builder().name(OBJECT_NAME).id(OBJECT_ID).typeName(TYPE).build());
 
     @Mock
     private HttpService httpService;
@@ -91,7 +92,7 @@ public class WowheadSearchServiceTest {
                 .build();
         when(httpService.get(anyString(), any(), eq(WowheadObjectDetailsDTO.class))).thenReturn(mockObjectDetails);
 
-        val result = wowheadSearchService.fetchObjectDetailsFromWowhead(OBJECT_ID, TYPE_NAME);
+        val result = wowheadSearchService.fetchObjectDetailsFromWowhead(OBJECT_ID, TYPE);
 
         verify(httpService, times(1)).get(anyString(), any(), eq(WowheadObjectDetailsDTO.class));
         assertEquals(result, mockObjectDetails);
@@ -101,7 +102,7 @@ public class WowheadSearchServiceTest {
     public void fetchObjectDetailsFromWowheadWithoutResult() throws VanillaWowArmoryServiceException {
         when(httpService.get(anyString(), any(), eq(WowheadObjectDetailsDTO.class))).thenReturn(null);
 
-        wowheadSearchService.fetchObjectDetailsFromWowhead(OBJECT_ID, TYPE_NAME);
+        wowheadSearchService.fetchObjectDetailsFromWowhead(OBJECT_ID, TYPE);
 
         verify(httpService, times(1)).get(anyString(), any(), eq(WowheadObjectDetailsDTO.class));
     }

@@ -11,6 +11,7 @@ import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryValidationException;
 import com.palfib.vanilla.wow.armory.service.character.CharacterService;
 import com.palfib.vanilla.wow.armory.service.common.command.AbstractInteractiveCommandService;
+import com.palfib.vanilla.wow.armory.service.common.validator.CharacterValidatorService;
 import lombok.val;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -32,9 +33,12 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
     private static final String LEVEL = "LEVEL";
 
     private final CharacterService characterService;
+    private final CharacterValidatorService characterValidatorService;
 
-    public CreateCharacterCommandService(final CharacterService characterService) {
+    public CreateCharacterCommandService(final CharacterService characterService,
+                                         final CharacterValidatorService characterValidatorService) {
         this.characterService = characterService;
+        this.characterValidatorService = characterValidatorService;
     }
 
     @Override
@@ -73,10 +77,10 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
 
     private Map<String, DiscordQuestionWrapper> generateQuestionWrappers(final List<String> argList) {
         val map = new HashMap<String, DiscordQuestionWrapper>();
-        map.put(RACE, new DiscordQuestionWrapper("What is your character's race?", this::validateRace));
-        map.put(CLASS, new DiscordQuestionWrapper("What is your character's class?", this::validateCharacterClass));
-        map.put(LEVEL, new DiscordQuestionWrapper("What is your character's level?", this::validateLevel));
-        map.put(NAME, new DiscordQuestionWrapper("What is your character's name?", this::validateSimpleName));
+        map.put(RACE, new DiscordQuestionWrapper("What is your character's race?", characterValidatorService::validateRace));
+        map.put(CLASS, new DiscordQuestionWrapper("What is your character's class?", characterValidatorService::validateCharacterClass));
+        map.put(LEVEL, new DiscordQuestionWrapper("What is your character's level?", characterValidatorService::validateLevel));
+        map.put(NAME, new DiscordQuestionWrapper("What is your character's name?", characterValidatorService::validateSimpleName));
         argList.forEach(argument -> map.values().stream()
                 .filter(question -> question.isFreeToAsk() && StringUtils.isEmpty(question.getValidator().apply(argument)))
                 .findFirst()
@@ -85,50 +89,21 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
         return map;
     }
 
-    private String validateRace(final String race) {
-        if (Race.parseAsEnum(race) == null) {
-            return "Given race is not valid.";
-        }
-        return null;
-    }
-
-    private String validateCharacterClass(final String characterClass) {
-        if (CharacterClass.parseAsEnum(characterClass) == null) {
-            return "Given class is not valid.";
-        }
-        return null;
-    }
-
-    private String validateLevel(final String level) {
-        try {
-            val longValue = Long.parseLong(level);
-            if (longValue < 1) {
-                return "Level cannot be less then 1.";
-            }
-            if (longValue > 60) {
-                return "Level cannot be more then 60.";
-            }
-        } catch (NumberFormatException ex) {
-            return "Not a valid number!";
-        }
-        return null;
-    }
-
     private void handleAnswers(final DiscordQuestionSequenceWrapper questionSequenceWrapper) {
         val event = questionSequenceWrapper.getEvent();
         try {
             val author = event.getAuthor();
-            val characterWrapper = CharacterWrapper.builder()
+            val characterWrapper = CharacterWrapper.CharacterWrapperBuilder()
                     .discordUserId(author.getId())
                     .discordUsername(author.getName())
-                    .name(StringUtils.capitalize(questionSequenceWrapper.getQuestions().get(NAME).getAnswer()))
+                    .characterName(StringUtils.capitalize(questionSequenceWrapper.getQuestions().get(NAME).getAnswer()))
                     .race(Race.parseAsEnum(questionSequenceWrapper.getQuestions().get(RACE).getAnswer()))
                     .characterClass(CharacterClass.parseAsEnum(questionSequenceWrapper.getQuestions().get(CLASS).getAnswer()))
                     .level(Long.parseLong(questionSequenceWrapper.getQuestions().get(LEVEL).getAnswer()))
                     .build();
 
             characterService.save(characterWrapper);
-            eventReply(event, String.format("%s has joined to the %s!", characterWrapper.getName(), characterWrapper.getRace().getFraction().getName()));
+            eventReply(event, String.format("%s has joined to the %s!", characterWrapper.getCharacterName(), characterWrapper.getRace().getFraction().getName()));
         } catch (final VanillaWowArmoryServiceException ex) {
             event.replyWarning(ex.getMessage());
         }

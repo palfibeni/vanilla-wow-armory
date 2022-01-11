@@ -2,6 +2,7 @@ package com.palfib.vanilla.wow.armory.service.character;
 
 import com.palfib.vanilla.wow.armory.data.entity.Character;
 import com.palfib.vanilla.wow.armory.data.entity.ArmoryUser;
+import com.palfib.vanilla.wow.armory.data.wrapper.CharacterNameWrapper;
 import com.palfib.vanilla.wow.armory.data.wrapper.CharacterWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
 import com.palfib.vanilla.wow.armory.repository.CharacterRepository;
@@ -54,7 +55,7 @@ public class CharacterService extends AbstractService {
      * Find Character by user, and name.
      *
      * @param armoryUser User
-     * @param name Character's name
+     * @param name       Character's name
      * @return Character entity wrapped in Optional.
      */
     public Optional<Character> findByUserAndName(final ArmoryUser armoryUser, final String name) {
@@ -76,10 +77,22 @@ public class CharacterService extends AbstractService {
             throw new VanillaWowArmoryServiceException(log, String.format("%s hasn't registered yet, please use the $register command.", characterWrapper.getDiscordUsername()));
         }
         val user = optionalUser.get();
-        val optionalCharacter = findByUserAndName(user, characterWrapper.getName());
+        val optionalCharacter = findByUserAndName(user, characterWrapper.getCharacterName());
         if (optionalCharacter.isPresent()) {
-            throw new VanillaWowArmoryServiceException(log, String.format("%s user already has %s named character.", characterWrapper.getDiscordUsername(), characterWrapper.getName()));
+            throw new VanillaWowArmoryServiceException(log, String.format("%s user already has %s named character.", characterWrapper.getDiscordUsername(), characterWrapper.getCharacterName()));
         }
         return characterRepository.saveAndFlush(new Character(user, characterWrapper));
+    }
+
+    public void delete(final CharacterNameWrapper characterNameWrapper) throws VanillaWowArmoryServiceException {
+        val optionalUser = userService.findByDiscordUserId(characterNameWrapper.getDiscordUserId());
+        if (optionalUser.isEmpty()) {
+            throw new VanillaWowArmoryServiceException(log, String.format("%s hasn't registered yet, please use the $register command.", characterNameWrapper.getDiscordUsername()));
+        }
+        val character = findByUserAndName(optionalUser.get(), characterNameWrapper.getCharacterName());
+        if (character.isEmpty()) {
+            throw new VanillaWowArmoryServiceException(log, String.format("%s hasn't registered yet, please use the $register command.", characterNameWrapper.getDiscordUsername()));
+        }
+        characterRepository.delete(character.get());
     }
 }
