@@ -7,14 +7,17 @@ import lombok.*;
 
 @Setter
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class CharacterWrapper {
-    private String discordUserId;
-    private String discordUsername;
-    private String name;
+public class CharacterWrapper extends CharacterNameWrapper {
     private Long level;
     private Race race;
     private CharacterClass characterClass;
+
+    @Builder(builderMethodName = "CharacterWrapperBuilder")
+    public CharacterWrapper(final String discordUserId, final String discordUsername, final String characterName, final Long level, final Race race, final CharacterClass characterClass) {
+        super(discordUserId, discordUsername, characterName);
+        this.level = level;
+        this.race = race;
+        this.characterClass = characterClass;
+    }
 }

@@ -1,5 +1,7 @@
 package com.palfib.vanilla.wow.armory.service.common;
 
+import com.palfib.vanilla.wow.armory.data.enums.Raid;
+import com.palfib.vanilla.wow.armory.data.enums.WowHeadResultType;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadObjectDetailsDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSearchResultDTO;
 import com.palfib.vanilla.wow.armory.data.dto.WowheadSuggestionDTO;
@@ -16,6 +18,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Responsible for reaching the public API endpoints of the wowhead.classic.com,
@@ -47,15 +50,34 @@ public class WowheadSearchService extends AbstractService {
      */
     public WowheadSearchResultWrapper searchOnWowhead(final String searchText) throws VanillaWowArmoryServiceException {
         val results = startSearchOnWowhead(searchText);
-        val firstResult = results.get(0);
-        val resultId = firstResult.getId();
-        val typeName = firstResult.getTypeName();
-        val objectDTO = fetchObjectDetailsFromWowhead(resultId, typeName);
-        val details = getDetails(objectDTO, typeName, resultId);
-        return WowheadSearchResultWrapper.builder()
-                .wowheadSuggestionDTO(firstResult)
-                .iconUrl(generateIconUrl(firstResult).orElse(null))
-                .details(details).build();
+        try {
+            val index = results.size() > 1 ? getResultIndex(searchText) : 0;
+            val result = results.get(index);
+            val resultId = result.getId();
+            val typeName = result.getTypeName();
+            val objectDTO = fetchObjectDetailsFromWowhead(resultId, typeName);
+            val details = getDetails(objectDTO, typeName, resultId);
+            return WowheadSearchResultWrapper.builder()
+                    .wowheadSuggestionDTO(result)
+                    .iconUrl(generateIconUrl(result).orElse(null))
+                    .details(details).build();
+        } catch (final NumberFormatException e) {
+            return getSearchSuggestionsWrapper(results);
+        }
+    }
+
+    private Integer getResultIndex(final String searchText) throws NumberFormatException {
+        val searchWords = searchText.split(" ");
+        return Integer.parseInt(searchWords[searchWords.length - 1]);
+    }
+
+    private WowheadSearchResultWrapper getSearchSuggestionsWrapper(final List<WowheadSuggestionDTO> suggestions) {
+        String details = IntStream.range(0, suggestions.size()).mapToObj(index -> {
+            val suggestion = suggestions.get(index);
+            val objectLink = String.format("[%s](%s%s%s)", suggestion.getName(), WOWHEAD_BASE_URL, getObjectTypeIdAsPath(suggestion.getTypeName(), suggestion.getId()), getObjectNameAsPath(suggestion.getName()));
+            return index + ". " + objectLink + " (" + suggestion.getTypeName() + ")";
+        }).collect(Collectors.joining("\n"));
+        return WowheadSearchResultWrapper.builder().details(details).build();
     }
 
     /**
@@ -75,7 +97,9 @@ public class WowheadSearchService extends AbstractService {
         if (optResults.isEmpty() || optResults.get().isEmpty()) {
             throw new VanillaWowArmoryServiceException(log, String.format("No results found for %s", searchText));
         }
-        return searchResponse.getResults();
+        return searchResponse.getResults().stream()
+                .filter(suggestion -> !WowHeadResultType.ITEM_APPEARANCE_SET.equals(suggestion.getTypeName()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -87,7 +111,7 @@ public class WowheadSearchService extends AbstractService {
      * @throws VanillaWowArmoryServiceException if there is no result in the details call,
      *                                          we throw an exception, with user-friendly message.
      */
-    WowheadObjectDetailsDTO fetchObjectDetailsFromWowhead(final Integer objectId, final String typeName) throws VanillaWowArmoryServiceException {
+    WowheadObjectDetailsDTO fetchObjectDetailsFromWowhead(final Integer objectId, final WowHeadResultType typeName) throws VanillaWowArmoryServiceException {
         val objectDTO = httpService.get(
                 WowheadSearchService.WOWHEAD_BASE_URL,
                 getTooltipPathBuilderFunction(typeName, objectId),
@@ -102,11 +126,11 @@ public class WowheadSearchService extends AbstractService {
         return uriBuilder -> uriBuilder.path(SEARCH_PATH).queryParam("q", searchText).build();
     }
 
-    private Function<UriBuilder, URI> getTooltipPathBuilderFunction(final String typeName, final Integer objectId) {
-        return uriBuilder -> uriBuilder.path(TOOLTIP_PATH + '/' + typeName.toLowerCase().replaceAll(" ", "-") + '/' + objectId).build();
+    private Function<UriBuilder, URI> getTooltipPathBuilderFunction(final WowHeadResultType typeName, final Integer objectId) {
+        return uriBuilder -> uriBuilder.path(TOOLTIP_PATH + '/' + typeName.toString().toLowerCase().replaceAll(" ", "-") + '/' + objectId).build();
     }
 
-    private String getDetails(final WowheadObjectDetailsDTO objectDTO, final String typeName, final Integer id) {
+    private String getDetails(final WowheadObjectDetailsDTO objectDTO, final WowHeadResultType typeName, final Integer id) {
         val objectLink = String.format("[%s](%s%s%s)", objectDTO.getName(), WOWHEAD_BASE_URL, getObjectTypeIdAsPath(typeName, id), getObjectNameAsPath(objectDTO.getName()));
         val details = objectDTO.getTooltip()
                 .trim()
@@ -122,7 +146,7 @@ public class WowheadSearchService extends AbstractService {
                 .replace(objectDTO.getName(), objectLink);
         val detailsBuilder = new StringBuilder(details);
         // For Raid type it is not reliable yet. :(
-        if (details.contains("Dungeon")) {
+        if (details.contains("Dungeon") || details.contains("Raid")) {
             val zoneBosses = getDungeonBosses(objectDTO.getName());
             if (!zoneBosses.isEmpty()) {
                 detailsBuilder.append("\n Bosses: \n");
@@ -142,7 +166,7 @@ public class WowheadSearchService extends AbstractService {
         if (!scriptMatcher.find()) {
             return Collections.emptyList();
         }
-        if (!scriptMatcher.group(2).contains("minibox")) {
+        if (scriptMatcher.group(2).isEmpty()) {
             return Collections.emptyList();
         }
         val bossPattern = Pattern.compile("\"(\\d+)\":\\{\"name_enus\":\"([^\"]+)\"},{0,1}");
@@ -156,14 +180,18 @@ public class WowheadSearchService extends AbstractService {
         return result;
     }
 
-    private String getObjectTypeIdAsPath(final String typeName, final Integer id) {
-        if (typeName.equals("Zone")) {
+    private String getObjectTypeIdAsPath(final WowHeadResultType typeName, final Integer id) {
+        if (WowHeadResultType.ZONE.equals(typeName)) {
             return "";
         }
-        return "/" + typeName.toLowerCase().replaceAll("'", "").replaceAll(" ", "-") + "=" + id;
+        return "/" + typeName.getUri() + "=" + id;
     }
 
     private String getObjectNameAsPath(final String zoneName) {
+        val raid = Raid.getByName(zoneName);
+        if (Objects.nonNull(raid)) {
+            return "/" + raid.getUri();
+        }
         return "/" + zoneName.toLowerCase().replaceAll("'", "").replaceAll(" ", "-");
     }
 

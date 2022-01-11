@@ -37,9 +37,9 @@ public class CharacterServiceTest {
 
     private static final Long CHARACTER_ID = 234L;
     private static final String CHARACTER_NAME = "FANCY_CHARACTERNAME";
-    private static final CharacterWrapper CHARACTER_WRAPPER = CharacterWrapper.builder()
+    private static final CharacterWrapper CHARACTER_WRAPPER = CharacterWrapper.CharacterWrapperBuilder()
             .discordUserId(DISCORD_USER_ID)
-            .name(CHARACTER_NAME)
+            .characterName(CHARACTER_NAME)
             .race(Race.HUMAN)
             .characterClass(CharacterClass.WARRIOR)
             .level(60L)

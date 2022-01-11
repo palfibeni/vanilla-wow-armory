@@ -35,7 +35,7 @@ public class CharacterTalent {
 
     public CharacterTalent(final Character character, final CharacterTalentWrapper characterTalentWrapper) {
         this.character = character;
-        this.name = characterTalentWrapper.getName();
+        this.name = characterTalentWrapper.getCharacterName();
         this.talent = characterTalentWrapper.getTalent();
         this.created = new Date();
     }

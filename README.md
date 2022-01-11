@@ -23,8 +23,12 @@
 Currently the bot is not deployed, so you have to run it on your computer, using MAVEN to install, build, and run it.
 You have to set first the ownerId, and discord bot token in the application.properties, which I added a sample only.
 
-- ./mvnw clean
-- ./mvnw install
+- ```./mvnw clean```
+- ```./mvnw install```
+
+Run locally:
+
+```mvn spring-boot:run -Dspring-boot.run.profiles=dev```
 
 Working with docker containers:
 
