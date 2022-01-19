@@ -16,7 +16,7 @@ import lombok.val;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -76,11 +76,11 @@ public class CreateCharacterCommandService extends AbstractInteractiveCommandSer
     }
 
     private Map<String, DiscordQuestionWrapper> generateQuestionWrappers(final List<String> argList) {
-        val map = new HashMap<String, DiscordQuestionWrapper>();
+        val map = new LinkedHashMap<String, DiscordQuestionWrapper>();
+        map.put(NAME, new DiscordQuestionWrapper("What is your character's name?", characterValidatorService::validateSimpleName));
         map.put(RACE, new DiscordQuestionWrapper("What is your character's race?", characterValidatorService::validateRace));
         map.put(CLASS, new DiscordQuestionWrapper("What is your character's class?", characterValidatorService::validateCharacterClass));
         map.put(LEVEL, new DiscordQuestionWrapper("What is your character's level?", characterValidatorService::validateLevel));
-        map.put(NAME, new DiscordQuestionWrapper("What is your character's name?", characterValidatorService::validateSimpleName));
         argList.forEach(argument -> map.values().stream()
                 .filter(question -> question.isFreeToAsk() && StringUtils.isEmpty(question.getValidator().apply(argument)))
                 .findFirst()
