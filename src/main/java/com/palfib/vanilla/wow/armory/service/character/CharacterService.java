@@ -84,6 +84,40 @@ public class CharacterService extends AbstractService {
         return characterRepository.saveAndFlush(new Character(user, characterWrapper));
     }
 
+    /**
+     * Updates an existing Character to the database.
+     *
+     * @param characterWrapper Character and User information
+     * @return Newly created Character.
+     * @throws VanillaWowArmoryServiceException throws exception, if the user has not yet registered,
+     *                                          or the character already exists in the DB.
+     */
+    public Character update(final CharacterWrapper characterWrapper) throws VanillaWowArmoryServiceException {
+        val optionalUser = userService.findByDiscordUserId(characterWrapper.getDiscordUserId());
+        if (optionalUser.isEmpty()) {
+            throw new VanillaWowArmoryServiceException(log, String.format("%s hasn't registered yet, please use the $register command.", characterWrapper.getDiscordUsername()));
+        }
+        val user = optionalUser.get();
+        val optionalCharacter = findByUserAndName(user, characterWrapper.getCharacterName());
+        if (optionalCharacter.isEmpty()) {
+            throw new VanillaWowArmoryServiceException(log, String.format("%s user doesn't have a character named %s.", characterWrapper.getDiscordUsername(), characterWrapper.getCharacterName()));
+        }
+        val character = optionalCharacter.get();
+        character.setCharacterClass(characterWrapper.getCharacterClass());
+        character.setLevel(characterWrapper.getLevel());
+        character.setName(characterWrapper.getCharacterName());
+        character.setRace(characterWrapper.getRace());
+        return characterRepository.saveAndFlush(character);
+    }
+
+
+    /**
+     * Deletes Character from the database.
+     *
+     * @param characterNameWrapper Character and User information
+     * @throws VanillaWowArmoryServiceException throws exception, if the user has not yet registered,
+     *                                          or the character is not exists in the DB.
+     */
     public void delete(final CharacterNameWrapper characterNameWrapper) throws VanillaWowArmoryServiceException {
         val optionalUser = userService.findByDiscordUserId(characterNameWrapper.getDiscordUserId());
         if (optionalUser.isEmpty()) {

@@ -16,7 +16,7 @@ import lombok.val;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -92,7 +92,7 @@ public class CharacterTalentCommandService extends AbstractInteractiveCommandSer
     }
 
     private Map<String, DiscordQuestionWrapper> generateQuestionWrappers(final String characterName, final List<String> argList) {
-        val map = new HashMap<String, DiscordQuestionWrapper>();
+        val map = new LinkedHashMap<String, DiscordQuestionWrapper>();
         map.put(CHARACTER_NAME, new DiscordQuestionWrapper("What is your character's name?", characterValidatorService::validateSimpleName));
         map.get(CHARACTER_NAME).setAnswer(characterName);
         map.put(TALENT, new DiscordQuestionWrapper("What is your talent's url?", this::validateTalent));

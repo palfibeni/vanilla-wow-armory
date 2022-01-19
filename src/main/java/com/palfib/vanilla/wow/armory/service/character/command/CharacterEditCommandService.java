@@ -2,7 +2,9 @@ package com.palfib.vanilla.wow.armory.service.character.command;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.palfib.vanilla.wow.armory.data.wrapper.CharacterNameWrapper;
+import com.palfib.vanilla.wow.armory.data.enums.CharacterClass;
+import com.palfib.vanilla.wow.armory.data.enums.Race;
+import com.palfib.vanilla.wow.armory.data.wrapper.CharacterWrapper;
 import com.palfib.vanilla.wow.armory.data.wrapper.DiscordQuestionSequenceWrapper;
 import com.palfib.vanilla.wow.armory.data.wrapper.DiscordQuestionWrapper;
 import com.palfib.vanilla.wow.armory.exception.VanillaWowArmoryServiceException;
@@ -23,38 +25,41 @@ import java.util.Map;
  * Responsible for the $character-delete command's functionality.
  */
 @Component
-public class CharacterDeleteCommandService extends AbstractInteractiveCommandService {
+public class CharacterEditCommandService extends AbstractInteractiveCommandService {
 
     private static final String CHARACTER_NAME = "CHARACTER_NAME";
+    private static final String RACE = "RACE";
+    private static final String CLASS = "CLASS";
+    private static final String LEVEL = "LEVEL";
 
     private final CharacterService characterService;
     private final CharacterValidatorService characterValidatorService;
 
-    public CharacterDeleteCommandService(final CharacterService characterService,
-                                         final CharacterValidatorService characterValidatorService) {
+    public CharacterEditCommandService(final CharacterService characterService,
+                                       final CharacterValidatorService characterValidatorService) {
         this.characterService = characterService;
         this.characterValidatorService = characterValidatorService;
     }
 
     @Override
     protected String getCommandName() {
-        return "character-delete";
+        return "character-edit";
     }
 
     @Override
     protected List<String> getAliases() {
-        return List.of("cd", "delete");
+        return List.of("ce", "edit");
     }
 
     @Override
     protected String getHelp() {
-        return "Delete your desired character";
+        return "Edit your character";
     }
 
     @Override
     protected void validateArguments(final CommandEvent event) throws VanillaWowArmoryValidationException {
         val argList = parseArguments(event);
-        if (argList.size() > 1) {
+        if (argList.size() > 4) {
             throw new VanillaWowArmoryValidationException(log, "Too many arguments");
         }
     }
@@ -73,7 +78,10 @@ public class CharacterDeleteCommandService extends AbstractInteractiveCommandSer
 
     private Map<String, DiscordQuestionWrapper> generateQuestionWrappers(final List<String> argList) {
         val map = new LinkedHashMap<String, DiscordQuestionWrapper>();
-        map.put(CHARACTER_NAME, new DiscordQuestionWrapper("What is your character's name?", characterValidatorService::validateSimpleName));
+        map.put(CHARACTER_NAME, new DiscordQuestionWrapper("Which character would you like to modify?", characterValidatorService::validateSimpleName));
+        map.put(RACE, new DiscordQuestionWrapper("What is your character's new race?", characterValidatorService::validateRace));
+        map.put(CLASS, new DiscordQuestionWrapper("What is your character's new class?", characterValidatorService::validateCharacterClass));
+        map.put(LEVEL, new DiscordQuestionWrapper("What is your character's new level?", characterValidatorService::validateLevel));
         argList.forEach(argument -> map.values().stream()
                 .filter(question -> question.isFreeToAsk() && StringUtils.isEmpty(question.getValidator().apply(argument)))
                 .findFirst()
@@ -86,14 +94,17 @@ public class CharacterDeleteCommandService extends AbstractInteractiveCommandSer
         val event = questionSequenceWrapper.getEvent();
         try {
             val author = event.getAuthor();
-            val characterNameWrapper = CharacterNameWrapper.builder()
+            val characterWrapper = CharacterWrapper.CharacterWrapperBuilder()
                     .discordUserId(author.getId())
                     .discordUsername(author.getName())
                     .characterName(questionSequenceWrapper.getQuestions().get(CHARACTER_NAME).getAnswer())
+                    .race(Race.parseAsEnum(questionSequenceWrapper.getQuestions().get(RACE).getAnswer()))
+                    .characterClass(CharacterClass.parseAsEnum(questionSequenceWrapper.getQuestions().get(CLASS).getAnswer()))
+                    .level(Long.parseLong(questionSequenceWrapper.getQuestions().get(LEVEL).getAnswer()))
                     .build();
 
-            characterService.delete(characterNameWrapper);
-            eventReply(event, String.format("%s is deleted!", characterNameWrapper.getCharacterName()));
+            characterService.update(characterWrapper);
+            eventReply(event, String.format("%s is updated!", characterWrapper.getCharacterName()));
         } catch (final VanillaWowArmoryServiceException ex) {
             event.replyWarning(ex.getMessage());
         }
